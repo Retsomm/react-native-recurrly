@@ -7,4 +7,10 @@ module.exports = defineConfig([
   {
     ignores: ['dist/*'],
   },
+  {
+    files: ['app/**/*.tsx', 'app/**/*.ts'],
+    rules: {
+      'import/no-unused-modules': 'off',
+    },
+  },
 ]);
