@@ -1,6 +1,15 @@
-import { View, Text,Image } from 'react-native';
+import { View, Text,Image, ImageSourcePropType } from 'react-native';
 import {formatCurrency} from "@/lib/utils";
-const UpcomingSubscriptionCard = ({ name,price,daysLeft,icon,currency }: ListHeadingProps) => {
+
+type UpcomingSubscriptionCardProps = {
+    name: string;
+    price: number;
+    daysLeft: number;
+    icon: ImageSourcePropType;
+    currency: string;
+};
+
+const UpcomingSubscriptionCard = ({ name,price,daysLeft,icon,currency }: UpcomingSubscriptionCardProps) => {
     return (
         <View className="upcoming-card">
             <View className="upcoming-row">
