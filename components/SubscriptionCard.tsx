@@ -1,24 +1,27 @@
-import {View, Text, Image, Pressable} from 'react-native';
-import {formatCurrency,formatSubscriptionDateTime,formatStatusLabel} from "@/lib/utils";
+import { View, Text, Pressable } from 'react-native';
+import { formatCurrency, formatSubscriptionDateTime, formatStatusLabel } from "@/lib/utils";
+import SubscriptionIcon from "@/components/SubscriptionIcon";
 import clsx from "clsx";
 
-const SubscriptionCard = ({ name, price, currency,icon, billing, color, category,plan,renewalDate,expanded,onPress,paymentMethod, startDate,status}:SubscriptionCardProps) => {
+const SubscriptionCard = ({ name, price, currency, icon, billing, color, category, plan, renewalDate, expanded, onPress, paymentMethod, startDate, status }: SubscriptionCardProps) => {
     return (
-        <Pressable onPress={onPress} className={clsx('sub-card',expanded ? 'sub-card-expanded':'bg-card')} style={ !expanded && color ? { backgroundColor: color } : undefined}>
+        <Pressable onPress={onPress} className={clsx('sub-card', expanded ? 'sub-card-expanded' : 'bg-card')} style={!expanded && color ? { backgroundColor: color } : undefined}>
             <View className="sub-head">
                 <View className="sub-main">
-                    <Image source={icon} className="sub-icon"/>
+                    <View className="sub-icon overflow-hidden rounded-lg">
+                        <SubscriptionIcon name={name} fallback={icon} size={64} />
+                    </View>
                     <View className="sub-copy">
                         <Text numberOfLines={1} className="sub-title">
                             {name}
                         </Text>
                         <Text numberOfLines={1} ellipsizeMode="tail" className="sub-meta">
-                            {category?.trim() || plan?.trim() || (renewalDate ? formatSubscriptionDateTime(renewalDate): '')}
+                            {category?.trim() || plan?.trim() || (renewalDate ? formatSubscriptionDateTime(renewalDate) : '')}
                         </Text>
                     </View>
                 </View>
                 <View className="sub-price-box">
-                    <Text className="sub-price">{formatCurrency(price,currency)}</Text>
+                    <Text className="sub-price">{formatCurrency(price, currency)}</Text>
                     <Text className="sub-billing">{billing}</Text>
                 </View>
             </View>
@@ -41,7 +44,7 @@ const SubscriptionCard = ({ name, price, currency,icon, billing, color, category
                         <View className="sub-row">
                             <View className="sub-row-copy">
                                 <Text className="sub-label">Renewal date:</Text>
-                                <Text className="sub-value" numberOfLines={1} ellipsizeMode="tail">{renewalDate ? formatSubscriptionDateTime(renewalDate): ''}</Text>
+                                <Text className="sub-value" numberOfLines={1} ellipsizeMode="tail">{renewalDate ? formatSubscriptionDateTime(renewalDate) : ''}</Text>
                             </View>
                         </View>
                         <View className="sub-row">
@@ -54,7 +57,7 @@ const SubscriptionCard = ({ name, price, currency,icon, billing, color, category
                 </View>
             )}
         </Pressable>
-    )
-}
+    );
+};
 
 export default SubscriptionCard;
