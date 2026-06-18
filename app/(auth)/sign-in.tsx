@@ -1,8 +1,8 @@
 import { useSSO } from "@clerk/expo";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
-import { useEffect } from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "@/constants/theme";
 import images from "@/constants/images";
@@ -11,6 +11,8 @@ WebBrowser.maybeCompleteAuthSession();
 
 const SignIn = () => {
     const { startSSOFlow } = useSSO();
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         void WebBrowser.warmUpAsync();
@@ -20,13 +22,18 @@ const SignIn = () => {
     }, []);
 
     const handleGoogleSignIn = async () => {
+        if (isLoading) return;
+        setIsLoading(true);
+        setError(null);
         try {
             const { createdSessionId, setActive } = await startSSOFlow({ strategy: "oauth_google" });
             if (createdSessionId && setActive) {
                 await setActive({ session: createdSessionId });
             }
         } catch (err) {
-            console.error("Google sign-in error:", err);
+            setError("登入失敗，請再試一次");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -40,14 +47,20 @@ const SignIn = () => {
                 <Text style={styles.tagline}>管理你的訂閱，輕鬆掌握每月花費</Text>
 
                 <View style={styles.buttonGroup}>
+                    {error && <Text style={styles.errorText}>{error}</Text>}
                     <TouchableOpacity
-                        style={styles.googleButton}
+                        style={[styles.googleButton, isLoading && styles.googleButtonDisabled]}
                         onPress={handleGoogleSignIn}
                         activeOpacity={0.7}
+                        disabled={isLoading}
                     >
-                        <Text style={styles.googleButtonText} numberOfLines={1}>
-                            使用 Google 登入
-                        </Text>
+                        {isLoading ? (
+                            <ActivityIndicator color="#fff" />
+                        ) : (
+                            <Text style={styles.googleButtonText} numberOfLines={1}>
+                                使用 Google 登入
+                            </Text>
+                        )}
                     </TouchableOpacity>
 
                     <Text style={styles.terms}>
@@ -111,6 +124,15 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         paddingHorizontal: 20,
         borderRadius: 14,
+    },
+    googleButtonDisabled: {
+        opacity: 0.6,
+    },
+    errorText: {
+        fontSize: 13,
+        fontFamily: "sans-regular",
+        color: "#ef4444",
+        textAlign: "center",
     },
     googleButtonText: {
         fontSize: 16,
