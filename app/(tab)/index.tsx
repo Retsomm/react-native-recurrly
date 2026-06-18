@@ -1,4 +1,4 @@
-import { Text, View, Image, FlatList, TouchableOpacity } from "react-native";
+import { Text, View, Image, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import "@/global.css";
 import { SafeAreaView } from "react-native-safe-area-context";
 import images from "@/constants/images";
@@ -16,7 +16,15 @@ import { useSubscriptions } from "@/context/SubscriptionsContext";
 const App = () => {
     const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const { subscriptions } = useSubscriptions();
+    const { subscriptions, isLoading } = useSubscriptions();
+
+    if (isLoading) {
+        return (
+            <SafeAreaView className="flex-1 bg-background items-center justify-center">
+                <ActivityIndicator size="large" />
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-background p-5">

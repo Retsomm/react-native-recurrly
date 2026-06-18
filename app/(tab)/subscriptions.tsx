@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TextInput, FlatList } from 'react-native';
+import { Text, View, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import SubscriptionCard from "@/components/SubscriptionCard";
 import { useSubscriptions } from "@/context/SubscriptionsContext";
@@ -7,7 +7,15 @@ import { useSubscriptions } from "@/context/SubscriptionsContext";
 const Subscriptions = () => {
     const [query, setQuery] = useState('');
     const [expandedId, setExpandedId] = useState<string | null>(null);
-    const { subscriptions } = useSubscriptions();
+    const { subscriptions, isLoading } = useSubscriptions();
+
+    if (isLoading) {
+        return (
+            <SafeAreaView className="flex-1 bg-background items-center justify-center">
+                <ActivityIndicator size="large" />
+            </SafeAreaView>
+        );
+    }
 
     const filtered = subscriptions.filter((s) =>
         s.name.toLowerCase().includes(query.toLowerCase()) ||
