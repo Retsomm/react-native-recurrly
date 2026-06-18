@@ -9,6 +9,7 @@ import {
     ScrollView,
 } from 'react-native';
 import { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import clsx from 'clsx';
 import { icons } from '@/constants/icons';
 import { useSubscriptions } from '@/context/SubscriptionsContext';
@@ -50,15 +51,16 @@ const CreateSubscriptionModal = ({ visible, onClose }: CreateSubscriptionModalPr
         onClose();
     };
 
-    const isValid = name.trim().length > 0 && price.trim().length > 0 && !isNaN(parseFloat(price));
+    const parsedPrice = Number(price.trim());
+    const isValid = name.trim().length > 0 && price.trim().length > 0 && Number.isFinite(parsedPrice) && parsedPrice > 0;
 
     const handleSubmit = () => {
         if (!isValid) return;
 
-        const parsedPrice = parseFloat(price);
         const now = new Date().toISOString();
-        const msInDay = 24 * 60 * 60 * 1000;
-        const renewalOffset = billing === 'Yearly' ? 365 * msInDay : 30 * msInDay;
+        const renewalDate = billing === 'Yearly'
+            ? dayjs().add(1, 'year').toISOString()
+            : dayjs().add(1, 'month').toISOString();
 
         addSubscription({
             id: `sub-${Date.now()}`,
@@ -70,7 +72,7 @@ const CreateSubscriptionModal = ({ visible, onClose }: CreateSubscriptionModalPr
             price: parsedPrice,
             currency: 'USD',
             billing,
-            renewalDate: new Date(Date.now() + renewalOffset).toISOString(),
+            renewalDate,
         });
 
         reset();

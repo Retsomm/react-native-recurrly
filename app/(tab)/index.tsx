@@ -52,7 +52,7 @@ const App = () => {
                             </View>
                         </View>
                         <View className="mb-5">
-                            <ListHeading title="ListHeading" />
+                            <ListHeading title="Upcoming Renewals" />
                             <FlatList
                                 data={UPCOMING_SUBSCRIPTIONS}
                                 renderItem={({ item }) => (
@@ -65,7 +65,7 @@ const App = () => {
                             />
                         </View>
 
-                        <ListHeading title="AllSubscription" />
+                        <ListHeading title="All Subscriptions" />
                     </>
                 )}
                 data={subscriptions}
