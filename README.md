@@ -87,14 +87,19 @@ lib/
 ```ts
 interface Subscription {
   id: string;
+  icon: ImageSourcePropType;
   name: string;
-  price: number;          // 以 USD 計價
-  billing: string;        // 'Monthly' | 'Yearly'
+  plan?: string;
   category?: string;      // 分類（Design / AI Tools / …）
+  paymentMethod?: string;
   status?: string;        // 'active' | 'cancelled'
   startDate?: string;     // ISO 8601
-  renewalDate?: string;   // ISO 8601
+  price: number;          // 以 USD 計價
   currency?: string;
+  billing: string;        // 'Monthly' | 'Yearly'
+  frequency?: string;
+  renewalDate?: string;   // ISO 8601
+  color?: string;
 }
 ```
 

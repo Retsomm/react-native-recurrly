@@ -27,7 +27,14 @@ const Insights = () => {
     const currentMonthLabel = dayjs().format('MMMM YYYY');
 
     const historySubscriptions = [...subscriptions]
-        .sort((a, b) => dayjs(b.startDate).diff(dayjs(a.startDate)))
+        .sort((a, b) => {
+            const aValid = a.startDate && dayjs(a.startDate).isValid();
+            const bValid = b.startDate && dayjs(b.startDate).isValid();
+            if (!aValid && !bValid) return 0;
+            if (!aValid) return 1;
+            if (!bValid) return -1;
+            return dayjs(b.startDate).diff(dayjs(a.startDate));
+        })
         .slice(0, 3);
 
     return (
