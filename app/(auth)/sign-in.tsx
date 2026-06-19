@@ -26,7 +26,8 @@ const SignIn = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const { createdSessionId, setActive } = await startSSOFlow({ strategy: "oauth_google" });
+            const redirectUrl = AuthSession.makeRedirectUri();
+            const { createdSessionId, setActive } = await startSSOFlow({ strategy: "oauth_google", redirectUrl });
             if (createdSessionId && setActive) {
                 await setActive({ session: createdSessionId });
             }
